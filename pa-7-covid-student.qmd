@@ -72,7 +72,7 @@ Correct the errors and then assign the resulting data to `state_totals`.
 ```{r}
 #| label: calculate-totals
 
-cases |> 
+state_totals <- cases |> 
   group_by(state) |> 
   summarise(total = sum(cases_daily)) |> 
   ungroup() # this is useful to do after a group_by calculation is complete so you do not continue grouping by those variables 
@@ -85,11 +85,13 @@ Now use the `states_totals` and identify the top ten states/territories with the
 #| label: top-10-states-cases
 
 state_totals |> 
-  ## order the data by total cases
-  ## extract just the top ten (Hint - look at the `slice() functions)
-  ## create a bar chart with x as the totals and y as the state names
-  ## order the states by greatest to smallest total on the graph
-  ## label, color, update as necessary to provide all relevant information
+  arrange(desc(total)) |>
+  slice(1:10) |> 
+  ggplot() + 
+  geom_col(aes(x = total, y = fct_reorder(state, total), fill = state)) +
+  labs(x = "Total number of COVID-19 cases", y = "State") + 
+  guides(fill = "none") + 
+  theme_bw()
 ```
 
 ### Canvas Quiz Question 1
